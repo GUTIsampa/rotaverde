@@ -15,17 +15,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -45,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.fiap.rotaverde.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmissaoCarroScreen() {
     var distancia by remember { mutableStateOf("") }
@@ -59,23 +66,38 @@ fun EmissaoCarroScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+        Spacer(modifier = Modifier.height(24.dp))
 
         Card(
             shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF))
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Image(
+                    painter = painterResource(id = R.drawable.carro),
+                    contentDescription = "Imagem de um carro verde",
+                    modifier = Modifier.size(300.dp)
+                )
+
                 Text("Emissão do Carro", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
                     value = distancia,
                     onValueChange = { distancia = it },
-                    label = { Text("Distância Percorrida") },
-                    modifier = Modifier.fillMaxWidth()
+                    label = { Text("Distância Percorrida em Km") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Ex: 160") },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = Color(0xFF175275), // Cor da borda quando focado
+                        unfocusedBorderColor = Color.Gray, // Cor da borda quando não focado
+                        focusedLabelColor = Color(0xFF175275)
+                    )
                 )
 
 
@@ -87,7 +109,10 @@ fun EmissaoCarroScreen() {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             RadioButton(
                                 selected = porte == size,
-                                onClick = { porte = size }
+                                onClick = { porte = size },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Color(0xFF175275), // Cor do botão quando selecionado
+                                )
                             )
                             Text(size)
                         }
@@ -102,7 +127,11 @@ fun EmissaoCarroScreen() {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             RadioButton(
                                 selected = combustivel == fuel,
-                                onClick = { combustivel = fuel }
+                                onClick = { combustivel = fuel },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Color(0xFF175275), // Cor do botão quando selecionado
+                                )
+
                             )
                             Text(fuel)
                         }
@@ -113,7 +142,9 @@ fun EmissaoCarroScreen() {
 
                 Button(
                     onClick = { /* Calcular emissão */ },
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
+                    border = BorderStroke(2.dp, Color(0xFF175275))
                 ) {
                     Text("Calcular!", color = Color.White, fontSize = 18.sp)
                 }

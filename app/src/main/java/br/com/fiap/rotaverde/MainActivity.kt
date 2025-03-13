@@ -126,10 +126,11 @@ fun Inicial() {
                                 colors = ButtonDefaults.buttonColors(
                                     Color(0xFF38A3A3)
                                 ),
+                                shape = RoundedCornerShape(8.dp),
                                 border = BorderStroke(2.dp, Color(0xFF175275))
                             ) {
                                 Text(
-                                    text = "Calcular!",
+                                    text = "Começar!",
                                     fontSize = 28.sp,
                                     fontFamily = FontFamily.SansSerif,
                                     color = Color.White

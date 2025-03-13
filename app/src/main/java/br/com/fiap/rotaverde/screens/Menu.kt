@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.fiap.rotaverde.R
@@ -63,7 +65,8 @@ fun Menu() {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    border = BorderStroke(2.dp, Color(0xFF175275))
+                    border = BorderStroke(2.dp, Color(0xFF175275)),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF))
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -98,10 +101,11 @@ fun Menu() {
                                 Button(
                                     onClick = { /* Ação do botão */ },
                                     modifier = Modifier
-                                        .size(100.dp)
-                                        .clip(RoundedCornerShape(16.dp)),
+                                        .size(100.dp),
+
                                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
-                                    border = BorderStroke(2.dp, Color(0xFF175275))
+                                    border = BorderStroke(2.dp, Color(0xFF175275)),
+                                    shape = RoundedCornerShape(8.dp)
                                 ) {
                                     Box(
                                         modifier = Modifier.fillMaxSize(),
@@ -118,10 +122,10 @@ fun Menu() {
                                 Button(
                                     onClick = { /* Ação do botão */ },
                                     modifier = Modifier
-                                        .size(100.dp)
-                                        .clip(RoundedCornerShape(16.dp)),
+                                        .size(100.dp),
                                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
-                                    border = BorderStroke(2.dp, Color(0xFF175275))
+                                    border = BorderStroke(2.dp, Color(0xFF175275)),
+                                    shape = RoundedCornerShape(8.dp),
                                 ) {
                                     Box(
                                         modifier = Modifier.fillMaxSize(),
@@ -144,10 +148,10 @@ fun Menu() {
                                 Button(
                                     onClick = { /* Ação do botão */ },
                                     modifier = Modifier
-                                        .size(100.dp)
-                                        .clip(RoundedCornerShape(16.dp)),
+                                        .size(100.dp),
                                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
-                                    border = BorderStroke(2.dp, Color(0xFF175275))
+                                    border = BorderStroke(2.dp, Color(0xFF175275)),
+                                    shape = RoundedCornerShape(8.dp),
                                 ) {
                                     Box(
                                         modifier = Modifier.fillMaxSize(),
@@ -164,9 +168,9 @@ fun Menu() {
                                 Button(
                                     onClick = { /* Ação do botão */ },
                                     modifier = Modifier
-                                        .size(100.dp)
-                                        .clip(RoundedCornerShape(16.dp)),
+                                        .size(100.dp),
                                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
+                                    shape = RoundedCornerShape(8.dp),
                                     border = BorderStroke(2.dp, Color(0xFF175275))
                                 ) {
                                     Box(
@@ -178,6 +182,7 @@ fun Menu() {
                                             contentDescription = "Imagem de Trem",
                                             modifier = Modifier.size(48.dp)
                                         )
+
                                     }
                                 }
                             }
@@ -188,3 +193,10 @@ fun Menu() {
         }
     }
 }
+
+@Preview
+@Composable
+private fun menupreview() {
+    Menu()
+}
+
