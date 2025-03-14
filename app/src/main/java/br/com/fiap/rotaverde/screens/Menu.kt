@@ -32,9 +32,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.fiap.rotaverde.R
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import br.com.fiap.rotaverde.Inicial
+
+
+
 
 @Composable
-fun Menu() {
+fun Menu(navController: NavController) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFF38A3A3) // Cor de fundo
@@ -88,8 +96,6 @@ fun Menu() {
                             )
                         }
 
-
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -102,44 +108,31 @@ fun Menu() {
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Button(
-                                    onClick = { /* Ação do botão */ },
-                                    modifier = Modifier
-                                        .size(100.dp),
-
+                                    onClick = { navController.navigate("emissao_carro") },
+                                    modifier = Modifier.size(100.dp),
                                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
                                     border = BorderStroke(2.dp, Color(0xFF175275)),
                                     shape = RoundedCornerShape(8.dp)
                                 ) {
-                                    Box(
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.car),
-                                            contentDescription = "Imagem do Carro",
-                                            modifier = Modifier.size(48.dp)
-                                        )
-                                    }
+                                    Image(
+                                        painter = painterResource(id = R.drawable.car),
+                                        contentDescription = "Imagem do Carro",
+                                        modifier = Modifier.size(48.dp)
+                                    )
                                 }
 
                                 Button(
-                                    onClick = { /* Ação do botão */ },
-                                    modifier = Modifier
-                                        .size(100.dp),
+                                    onClick = { navController.navigate("emissao_aviao") },
+                                    modifier = Modifier.size(100.dp),
                                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
                                     border = BorderStroke(2.dp, Color(0xFF175275)),
-                                    shape = RoundedCornerShape(8.dp),
+                                    shape = RoundedCornerShape(8.dp)
                                 ) {
-                                    Box(
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.plane),
-                                            contentDescription = "Imagem do Avião",
-                                            modifier = Modifier.size(48.dp)
-                                        )
-                                    }
+                                    Image(
+                                        painter = painterResource(id = R.drawable.plane),
+                                        contentDescription = "Imagem do Avião",
+                                        modifier = Modifier.size(48.dp)
+                                    )
                                 }
                             }
 
@@ -149,44 +142,31 @@ fun Menu() {
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Button(
-                                    onClick = { /* Ação do botão */ },
-                                    modifier = Modifier
-                                        .size(100.dp),
+                                    onClick = { navController.navigate("emissao_moto") },
+                                    modifier = Modifier.size(100.dp),
                                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
                                     border = BorderStroke(2.dp, Color(0xFF175275)),
-                                    shape = RoundedCornerShape(8.dp),
+                                    shape = RoundedCornerShape(8.dp)
                                 ) {
-                                    Box(
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.motorbike),
-                                            contentDescription = "imagem de Moto",
-                                            modifier = Modifier.size(48.dp)
-                                        )
-                                    }
+                                    Image(
+                                        painter = painterResource(id = R.drawable.motorbike),
+                                        contentDescription = "Imagem de Moto",
+                                        modifier = Modifier.size(48.dp)
+                                    )
                                 }
 
                                 Button(
-                                    onClick = { /* Ação do botão */ },
-                                    modifier = Modifier
-                                        .size(100.dp),
+                                    onClick = { navController.navigate("emissao_trem") },
+                                    modifier = Modifier.size(100.dp),
                                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
-                                    shape = RoundedCornerShape(8.dp),
-                                    border = BorderStroke(2.dp, Color(0xFF175275))
+                                    border = BorderStroke(2.dp, Color(0xFF175275)),
+                                    shape = RoundedCornerShape(8.dp)
                                 ) {
-                                    Box(
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.train),
-                                            contentDescription = "Imagem de Trem",
-                                            modifier = Modifier.size(48.dp)
-                                        )
-
-                                    }
+                                    Image(
+                                        painter = painterResource(id = R.drawable.train),
+                                        contentDescription = "Imagem de Trem",
+                                        modifier = Modifier.size(48.dp)
+                                    )
                                 }
                             }
                         }
@@ -197,9 +177,12 @@ fun Menu() {
     }
 }
 
+
 @Preview
 @Composable
 private fun menupreview() {
-    Menu()
+    Menu(
+        navController = TODO()
+    )
 }
 

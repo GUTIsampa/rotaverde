@@ -1,5 +1,6 @@
 package br.com.fiap.rotaverde.screens
 
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -47,12 +48,12 @@ import br.com.fiap.rotaverde.R
 
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EmissaoCarroScreen() {
+fun EmissaoMotoScreen() {
     var distancia by remember { mutableStateOf("") }
-    var porte by remember { mutableStateOf("Pequeno") }
+    var cilindradas by remember { mutableStateOf("Baixa \n" +
+            "(50-250cc)") }
     var combustivel by remember { mutableStateOf("Gasolina") }
     var showResult by remember { mutableStateOf(false) }
 
@@ -78,11 +79,11 @@ fun EmissaoCarroScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.carro),
-                    contentDescription = "Imagem de um carro verde",
+                    painter = painterResource(id = R.drawable.moto),
+                    contentDescription = "Imagem de uma moto verde",
                     modifier = Modifier.size(300.dp)
                 )
-                Text("Emissão do Carro", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text("Emissão da moto", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
@@ -100,13 +101,15 @@ fun EmissaoCarroScreen() {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text("Porte:")
+                Text("Cilindradas:")
                 Row {
-                    listOf("Pequeno", "Medio", "Grande").forEach { size ->
+                    listOf("Baixa \n" +
+                            "(50-250cc)", "Media \n(300-650cc)", "Alta\n" +
+                            "(700c+)").forEach { size ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             RadioButton(
-                                selected = porte == size,
-                                onClick = { porte = size },
+                                selected = cilindradas == size,
+                                onClick = { cilindradas = size },
                                 colors = RadioButtonDefaults.colors(selectedColor = Color(0xFF175275))
                             )
                             Text(size)
@@ -118,7 +121,7 @@ fun EmissaoCarroScreen() {
 
                 Text("Combustível:")
                 Row {
-                    listOf("Gasolina", "Etanol", "Diesel").forEach { fuel ->
+                    listOf("Gasolina", "Etanol").forEach { fuel ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             RadioButton(
                                 selected = combustivel == fuel,
@@ -158,37 +161,37 @@ fun EmissaoCarroScreen() {
                 border = BorderStroke(2.dp, Color.Black)
             ) {
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
-                        verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.co2),
-                            contentDescription = "Ícone de CO2",
-                            modifier = Modifier.size(100.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
-                        Text(
-                            text = "1600 Kg",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
+                    verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.co2),
+                        contentDescription = "Ícone de CO2",
+                        modifier = Modifier.size(100.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
+                    Text(
+                        text = "1600 Kg",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
     }
+}
 
 
 
 
 @Preview
 @Composable
-private fun carropreview() {
-    EmissaoCarroScreen()
+private fun motopreview() {
+    EmissaoMotoScreen()
 }
 
 

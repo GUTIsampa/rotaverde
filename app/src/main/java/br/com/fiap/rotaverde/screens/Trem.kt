@@ -1,5 +1,6 @@
 package br.com.fiap.rotaverde.screens
 
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -47,13 +48,11 @@ import br.com.fiap.rotaverde.R
 
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EmissaoCarroScreen() {
+fun EmissaotremScreen() {
     var distancia by remember { mutableStateOf("") }
-    var porte by remember { mutableStateOf("Pequeno") }
-    var combustivel by remember { mutableStateOf("Gasolina") }
+    var combustivel by remember { mutableStateOf("Locomotiva") }
     var showResult by remember { mutableStateOf(false) }
 
     Column(
@@ -78,11 +77,11 @@ fun EmissaoCarroScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.carro),
-                    contentDescription = "Imagem de um carro verde",
+                    painter = painterResource(id = R.drawable.trem),
+                    contentDescription = "Imagem de um trem verde",
                     modifier = Modifier.size(300.dp)
                 )
-                Text("Emissão do Carro", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text("Emissão do trem", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
@@ -100,25 +99,10 @@ fun EmissaoCarroScreen() {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text("Porte:")
-                Row {
-                    listOf("Pequeno", "Medio", "Grande").forEach { size ->
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            RadioButton(
-                                selected = porte == size,
-                                onClick = { porte = size },
-                                colors = RadioButtonDefaults.colors(selectedColor = Color(0xFF175275))
-                            )
-                            Text(size)
-                        }
-                    }
-                }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text("Combustível:")
+                Text("Trem:")
                 Row {
-                    listOf("Gasolina", "Etanol", "Diesel").forEach { fuel ->
+                    listOf("Locomotiva", "Metrô").forEach { fuel ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             RadioButton(
                                 selected = combustivel == fuel,
@@ -158,37 +142,38 @@ fun EmissaoCarroScreen() {
                 border = BorderStroke(2.dp, Color.Black)
             ) {
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
-                        verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.co2),
-                            contentDescription = "Ícone de CO2",
-                            modifier = Modifier.size(100.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
-                        Text(
-                            text = "1600 Kg",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
+                    verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.co2),
+                        contentDescription = "Ícone de CO2",
+                        modifier = Modifier.size(100.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
+                    Text(
+                        text = "1600 Kg",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
     }
+}
 
 
 
 
 @Preview
 @Composable
-private fun carropreview() {
-    EmissaoCarroScreen()
+private fun trempreview() {
+    EmissaotremScreen()
 }
+
 
 
