@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -63,7 +64,9 @@ fun Menu() {
                     .padding(start = 30.dp, end = 30.dp, bottom = 50.dp)
             ) {
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(elevation = 16.dp, shape = RoundedCornerShape(12.dp)),
                     shape = RoundedCornerShape(16.dp),
                     border = BorderStroke(2.dp, Color(0xFF175275)),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF))
