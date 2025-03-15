@@ -54,7 +54,7 @@ fun EmissaoCarroScreen() {
     var distancia by remember { mutableStateOf("") }
     var porte by remember { mutableStateOf("Pequeno") }
     var combustivel by remember { mutableStateOf("Gasolina") }
-    var showResult by remember { mutableStateOf(false) }
+    var showResult by remember { mutableStateOf<Double?>(null) }
 
     Column(
         modifier = Modifier
@@ -133,19 +133,55 @@ fun EmissaoCarroScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { showResult = true },
+                    onClick = {
+                        val dist = distancia.toDoubleOrNull() ?: 0.0
+                        showResult = calcularEmissaoDeCo2Carro(porte, combustivel, dist)
+                    },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
                     border = BorderStroke(2.dp, Color(0xFF175275))
                 ) {
                     Text("Calcular!", color = Color.White, fontSize = 18.sp)
                 }
+
+                showResult?.let {
+                    Card(
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 60.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC20E)),
+                        border = BorderStroke(2.dp, Color.Black)
+                    ) {
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
+                            verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.co2),
+                                contentDescription = "Ícone de CO2",
+                                modifier = Modifier.size(100.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
+                            Text(
+                                "%.2f Kg".format(it),
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
             }
         }
+    }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        AnimatedVisibility(
+       /* AnimatedVisibility(
             visible = showResult,
             enter = expandVertically() + fadeIn()
         ) {
@@ -158,29 +194,38 @@ fun EmissaoCarroScreen() {
                 border = BorderStroke(2.dp, Color.Black)
             ) {
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
-                        verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.co2),
-                            contentDescription = "Ícone de CO2",
-                            modifier = Modifier.size(100.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
-                        Text(
-                            text = "1600 Kg",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
+                    verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.co2),
+                        contentDescription = "Ícone de CO2",
+                        modifier = Modifier.size(100.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
+                    Text(
+                        text = "1600 Kg",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
-        }
+        }*/
     }
+
+//Função para calcular o Co2
+fun calcularEmissaoDeCo2Carro(porte: String, combustivel: String, distancia: Double): Double {
+    val fatorEmissao = mapOf(
+        "Gasolina" to mapOf("Pequeno" to 0.12, "Medio" to 0.14, "Grande" to 0.18),
+        "Etanol" to mapOf("Pequeno" to 0.08,"Medio" to 0.10, "Grande" to 0.12),
+        "Diesel" to mapOf("Pequeno" to 0.15, "Medio" to 0.17, "Grande" to 0.22)
+    )
+    return fatorEmissao[combustivel]?.get(porte)?.times(distancia)?:0.0
+}
 
 
 

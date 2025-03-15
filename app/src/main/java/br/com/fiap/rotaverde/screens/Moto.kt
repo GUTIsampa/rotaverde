@@ -55,7 +55,7 @@ fun EmissaoMotoScreen() {
     var cilindradas by remember { mutableStateOf("Baixa \n" +
             "(50-250cc)") }
     var combustivel by remember { mutableStateOf("Gasolina") }
-    var showResult by remember { mutableStateOf(false) }
+    var showResult by remember { mutableStateOf<Double?>(null) }
 
     Column(
         modifier = Modifier
@@ -103,9 +103,11 @@ fun EmissaoMotoScreen() {
 
                 Text("Cilindradas:")
                 Row {
-                    listOf("Baixa \n" +
-                            "(50-250cc)", "Media \n(300-650cc)", "Alta\n" +
-                            "(700c+)").forEach { size ->
+                    listOf(
+                        "Baixa \n" +
+                                "(50-250cc)", "Media \n(300-650cc)", "Alta\n" +
+                                "(700c+)"
+                    ).forEach { size ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             RadioButton(
                                 selected = cilindradas == size,
@@ -136,55 +138,65 @@ fun EmissaoMotoScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { showResult = true },
+                    onClick = {
+                        val dist = distancia.toDoubleOrNull() ?: 0.0
+                        showResult = calcularCO2Moto(cilindradas, combustivel, dist)
+                    },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
                     border = BorderStroke(2.dp, Color(0xFF175275))
                 ) {
                     Text("Calcular!", color = Color.White, fontSize = 18.sp)
                 }
-            }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+                showResult?.let {
+                    Card(
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 60.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC20E)),
+                        border = BorderStroke(2.dp, Color.Black)
+                    ) {
 
-        AnimatedVisibility(
-            visible = showResult,
-            enter = expandVertically() + fadeIn()
-        ) {
-            Card(
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 60.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC20E)),
-                border = BorderStroke(2.dp, Color.Black)
-            ) {
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
-                    verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.co2),
-                        contentDescription = "Ícone de CO2",
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
-                    Text(
-                        text = "1600 Kg",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
+                            verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.co2),
+                                contentDescription = "Ícone de CO2",
+                                modifier = Modifier.size(100.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
+                            Text(
+                                "%.2f Kg".format(it),
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
                 }
             }
         }
     }
-}
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+    }
+
+fun calcularCO2Moto(porte: String, combustivel: String, distancia: Double): Double {
+    val fatorEmissao = when (porte) {
+        "Baixa \n" + "(50-250cc)" -> if (combustivel == "Gasolina") 0.08 else 0.05
+        "Media \n(300-650cc)" -> if (combustivel == "Gasolina") 0.10 else 0.07
+        "Alta\n" + "(700c+)" -> if (combustivel == "Gasolina") 0.15 else 0.10
+        else -> 0.0
+    }
+    return distancia * fatorEmissao
+}
 
 
 
