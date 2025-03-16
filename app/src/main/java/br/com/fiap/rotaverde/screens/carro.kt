@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,6 +56,7 @@ fun EmissaoCarroScreen() {
     var porte by remember { mutableStateOf("Pequeno") }
     var combustivel by remember { mutableStateOf("Gasolina") }
     var showResult by remember { mutableStateOf<Double?>(null) }
+    var showError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -63,7 +65,6 @@ fun EmissaoCarroScreen() {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Spacer(modifier = Modifier.height(24.dp))
 
         Card(
@@ -113,9 +114,7 @@ fun EmissaoCarroScreen() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Text("Combustível:")
                 Row {
                     listOf("Gasolina", "Etanol", "Diesel").forEach { fuel ->
@@ -129,13 +128,18 @@ fun EmissaoCarroScreen() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = {
-                        val dist = distancia.toDoubleOrNull() ?: 0.0
-                        showResult = calcularEmissaoDeCo2Carro(porte, combustivel, dist)
+                        val dist = distancia.toDoubleOrNull() ?: -1.0
+                        if (dist <= 0) {
+                            showError = true
+                            showResult = null
+                        } else {
+                            showError = false
+                            showResult = calcularEmissaoDeCo2Carro(porte, combustivel, dist)
+                        }
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
@@ -144,31 +148,46 @@ fun EmissaoCarroScreen() {
                     Text("Calcular!", color = Color.White, fontSize = 18.sp)
                 }
 
-                showResult?.let {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                if (showError) {
+                    Text(
+                        text = "!Coloque um valor válido de distância",
+                        color = Color.Red,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                AnimatedVisibility(
+                    visible = showResult != null,
+                    enter = expandVertically() + fadeIn(),
+                ) {
                     Card(
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 60.dp),
+                            .padding(horizontal = 60.dp, vertical = 30.dp),
                         colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC20E)),
                         border = BorderStroke(2.dp, Color.Black)
                     ) {
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp),
-                            horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
-                            verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.co2),
                                 contentDescription = "Ícone de CO2",
                                 modifier = Modifier.size(100.dp)
                             )
-                            Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
+                            Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                "%.2f Kg".format(it),
+                                "%.2f Kg".format(showResult),
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -178,55 +197,17 @@ fun EmissaoCarroScreen() {
             }
         }
     }
+}
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-       /* AnimatedVisibility(
-            visible = showResult,
-            enter = expandVertically() + fadeIn()
-        ) {
-            Card(
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 60.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC20E)),
-                border = BorderStroke(2.dp, Color.Black)
-            ) {
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
-                    verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.co2),
-                        contentDescription = "Ícone de CO2",
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
-                    Text(
-                        text = "1600 Kg",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }*/
-    }
-
-//Função para calcular o Co2
+// Função para calcular o CO2
 fun calcularEmissaoDeCo2Carro(porte: String, combustivel: String, distancia: Double): Double {
     val fatorEmissao = mapOf(
         "Gasolina" to mapOf("Pequeno" to 0.12, "Medio" to 0.14, "Grande" to 0.18),
-        "Etanol" to mapOf("Pequeno" to 0.08,"Medio" to 0.10, "Grande" to 0.12),
+        "Etanol" to mapOf("Pequeno" to 0.08, "Medio" to 0.10, "Grande" to 0.12),
         "Diesel" to mapOf("Pequeno" to 0.15, "Medio" to 0.17, "Grande" to 0.22)
     )
-    return fatorEmissao[combustivel]?.get(porte)?.times(distancia)?:0.0
+    return fatorEmissao[combustivel]?.get(porte)?.times(distancia) ?: 0.0
 }
-
 
 
 

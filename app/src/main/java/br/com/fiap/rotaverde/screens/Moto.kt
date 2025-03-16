@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,10 +53,10 @@ import br.com.fiap.rotaverde.R
 @Composable
 fun EmissaoMotoScreen() {
     var distancia by remember { mutableStateOf("") }
-    var cilindradas by remember { mutableStateOf("Baixa \n" +
-            "(50-250cc)") }
+    var cilindradas by remember { mutableStateOf("Baixa \n(50-250cc)") }
     var combustivel by remember { mutableStateOf("Gasolina") }
     var showResult by remember { mutableStateOf<Double?>(null) }
+    var showError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -103,11 +104,7 @@ fun EmissaoMotoScreen() {
 
                 Text("Cilindradas:")
                 Row {
-                    listOf(
-                        "Baixa \n" +
-                                "(50-250cc)", "Media \n(300-650cc)", "Alta\n" +
-                                "(700c+)"
-                    ).forEach { size ->
+                    listOf("Baixa \n(50-250cc)", "Media \n(300-650cc)", "Alta\n(700c+)").forEach { size ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             RadioButton(
                                 selected = cilindradas == size,
@@ -139,8 +136,14 @@ fun EmissaoMotoScreen() {
 
                 Button(
                     onClick = {
-                        val dist = distancia.toDoubleOrNull() ?: 0.0
-                        showResult = calcularCO2Moto(cilindradas, combustivel, dist)
+                        val dist = distancia.toDoubleOrNull() ?: -1.0
+                        if (dist <= 0) {
+                            showError = true
+                            showResult = null
+                        } else {
+                            showError = false
+                            showResult = calcularCO2Moto(cilindradas, combustivel, dist)
+                        }
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
@@ -149,31 +152,46 @@ fun EmissaoMotoScreen() {
                     Text("Calcular!", color = Color.White, fontSize = 18.sp)
                 }
 
-                showResult?.let {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                if (showError) {
+                    Text(
+                        text = "!Coloque um valor válido de distância",
+                        color = Color.Red,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                AnimatedVisibility(
+                    visible = showResult != null,
+                    enter = expandVertically() + fadeIn(),
+                ) {
                     Card(
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 60.dp),
+                            .padding(horizontal = 60.dp, vertical = 30.dp),
                         colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC20E)),
                         border = BorderStroke(2.dp, Color.Black)
                     ) {
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp),
-                            horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
-                            verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.co2),
                                 contentDescription = "Ícone de CO2",
                                 modifier = Modifier.size(100.dp)
                             )
-                            Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
+                            Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                "%.2f Kg".format(it),
+                                "%.2f Kg".format(showResult),
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -183,16 +201,14 @@ fun EmissaoMotoScreen() {
             }
         }
     }
+}
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-    }
-
+// Função para calcular o CO2
 fun calcularCO2Moto(porte: String, combustivel: String, distancia: Double): Double {
     val fatorEmissao = when (porte) {
-        "Baixa \n" + "(50-250cc)" -> if (combustivel == "Gasolina") 0.08 else 0.05
+        "Baixa \n(50-250cc)" -> if (combustivel == "Gasolina") 0.08 else 0.05
         "Media \n(300-650cc)" -> if (combustivel == "Gasolina") 0.10 else 0.07
-        "Alta\n" + "(700c+)" -> if (combustivel == "Gasolina") 0.15 else 0.10
+        "Alta\n(700c+)" -> if (combustivel == "Gasolina") 0.15 else 0.10
         else -> 0.0
     }
     return distancia * fatorEmissao
