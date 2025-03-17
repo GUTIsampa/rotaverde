@@ -134,57 +134,58 @@ fun EmissaoAviaoScreen() {
                 ) {
                     Text("Calcular!", color = Color.White, fontSize = 18.sp)
                 }
-            }
-        }
+                Spacer(modifier = Modifier.height(16.dp))
 
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (showError) {
-            Text(
-                text = "!Coloque um valor válido de distância",
-                color = Color.Red,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
-        AnimatedVisibility(
-            visible = showResult != null,
-            enter = expandVertically() + fadeIn(),
-        ) {
-            Card(
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 60.dp, vertical = 30.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC20E)),
-                border = BorderStroke(2.dp, Color.Black)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.co2),
-                        contentDescription = "Ícone de CO2",
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
+                if (showError) {
                     Text(
-                        "%.2f Kg".format(showResult),
+                        text = "!Coloque um valor válido de distância",
+                        color = Color.Red,
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
+
+                AnimatedVisibility(
+                    visible = showResult != null,
+                    enter = expandVertically() + fadeIn(),
+                ) {
+                    Card(
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 60.dp, vertical = 30.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC20E)),
+                        border = BorderStroke(2.dp, Color.Black)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.co2),
+                                contentDescription = "Ícone de CO2",
+                                modifier = Modifier.size(100.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                "%.2f Kg".format(showResult),
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            }
             }
         }
-    }
+
+
+
 }
 
 fun calcularCo2Aviao(distancia: Double, tipoAviao: String): Double {
