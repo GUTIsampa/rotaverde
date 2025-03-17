@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,7 +53,8 @@ import br.com.fiap.rotaverde.R
 fun EmissaoAviaoScreen() {
     var distancia by remember { mutableStateOf("") }
     var combustivel by remember { mutableStateOf("Turbina") }
-    var showResult by remember { mutableStateOf(false) }
+    var showResult by remember { mutableStateOf<Double?>(null) }
+    var showError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -101,7 +103,7 @@ fun EmissaoAviaoScreen() {
 
                 Text("Avião:")
                 Row {
-                    listOf("Turbina", "Turboélice").forEach { fuel ->
+                    listOf("Turbina", "TurboHélice").forEach { fuel ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             RadioButton(
                                 selected = combustivel == fuel,
@@ -116,7 +118,16 @@ fun EmissaoAviaoScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { showResult = true },
+                    onClick = {
+                        val dist = distancia.toDoubleOrNull() ?: -1.0
+                        if (dist <= 0) {
+                            showError = true
+                            showResult = null
+                        } else {
+                            showError = false
+                            showResult = calcularCo2Aviao(dist, combustivel)
+                        }
+                    },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFF38A3A3)),
                     border = BorderStroke(2.dp, Color(0xFF175275))
@@ -126,36 +137,47 @@ fun EmissaoAviaoScreen() {
             }
         }
 
+
         Spacer(modifier = Modifier.height(16.dp))
 
+        if (showError) {
+            Text(
+                text = "!Coloque um valor válido de distância",
+                color = Color.Red,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
         AnimatedVisibility(
-            visible = showResult,
-            enter = expandVertically() + fadeIn()
+            visible = showResult != null,
+            enter = expandVertically() + fadeIn(),
         ) {
             Card(
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 60.dp),
+                    .padding(horizontal = 60.dp, vertical = 30.dp),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC20E)),
                 border = BorderStroke(2.dp, Color.Black)
             ) {
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center, // Centraliza os itens na horizontal
-                    verticalAlignment = Alignment.CenterVertically // Alinha os itens na vertical
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.co2),
                         contentDescription = "Ícone de CO2",
                         modifier = Modifier.size(100.dp)
                     )
-                    Spacer(modifier = Modifier.width(8.dp)) // Espaço entre a imagem e o texto
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "1600 Kg",
+                        "%.2f Kg".format(showResult),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -163,6 +185,22 @@ fun EmissaoAviaoScreen() {
             }
         }
     }
+}
+
+fun calcularCo2Aviao(distancia: Double, tipoAviao: String): Double {
+    val fatorEmissao = when(tipoAviao){
+        "Turbina" -> 3.15
+        "TurboHélice" -> 2.5
+        else ->0.0
+    }
+
+    val consumoPorKm = when(tipoAviao){
+        "Turbina" -> 4.0
+        "TurboHélice" -> 2.5
+        else ->0.0
+    }
+
+    return distancia * consumoPorKm * fatorEmissao
 }
 
 
